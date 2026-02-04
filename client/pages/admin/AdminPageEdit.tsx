@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/select";
 import { ArrowLeft, Save, Eye, Loader2, ExternalLink, History } from "lucide-react";
 import BlockEditor from "../../components/admin/BlockEditor";
-import BlockRenderer from "../../components/BlockRenderer";
+import BlockRenderer from "@site/components/BlockRenderer";
 import PageContentEditor from "../../components/admin/PageContentEditor";
 import ImageUploader from "../../components/admin/ImageUploader";
 import { clearPageCache } from "../../hooks/usePageContent";
