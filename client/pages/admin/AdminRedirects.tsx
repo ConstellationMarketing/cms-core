@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useUserRole } from '@/hooks/useUserRole';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '../../lib/supabase';
 import type { Redirect } from '@/lib/database.types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
