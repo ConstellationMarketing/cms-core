@@ -22,7 +22,7 @@ import {
 } from '@/components/ui/select';
 import { Plus, Search, Edit, Trash2, ExternalLink, Loader2, Square, CheckSquare, MinusSquare } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
-import BulkActionBar, { BulkAction } from '@/components/admin/BulkActionBar';
+import BulkActionBar, { BulkAction } from '../../components/admin/BulkActionBar';
 import {
   AlertDialog,
   AlertDialogAction,
