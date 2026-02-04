@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useUserRole } from '@/hooks/useUserRole';
+import { useUserRole } from '../../hooks/useUserRole';
 import { supabase } from '../../lib/supabase';
 import type { Template } from '@/lib/database.types';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';

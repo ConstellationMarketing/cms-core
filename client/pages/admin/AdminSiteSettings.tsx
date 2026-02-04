@@ -13,7 +13,7 @@ import {
   rowToSiteSettings,
   siteSettingsToRow,
 } from "@/lib/siteSettingsTypes";
-import { clearSiteSettingsCache } from "@/hooks/useSiteSettings";
+import { clearSiteSettingsCache } from "../../hooks/useSiteSettings";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -46,7 +46,7 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
-import { useUserRole } from "@/hooks/useUserRole";
+import { useUserRole } from "../../hooks/useUserRole";
 
 export default function AdminSiteSettings() {
   const [loading, setLoading] = useState(true);

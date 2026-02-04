@@ -28,7 +28,7 @@ import BlockEditor from "@/components/admin/BlockEditor";
 import BlockRenderer from "@/components/BlockRenderer";
 import PageContentEditor from "@/components/admin/PageContentEditor";
 import ImageUploader from "@/components/admin/ImageUploader";
-import { clearPageCache } from "@/hooks/usePageContent";
+import { clearPageCache } from "../../hooks/usePageContent";
 import RevisionPanel, { createPageRevision } from "@/components/admin/RevisionPanel";
 import URLChangeRedirectModal from "@/components/admin/URLChangeRedirectModal";
 import type { PageRevision } from "@/lib/database.types";
