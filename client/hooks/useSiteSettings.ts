@@ -3,7 +3,7 @@ import type { SiteSettings, SiteSettingsRow } from "../lib/siteSettingsTypes";
 import {
   DEFAULT_SITE_SETTINGS,
   rowToSiteSettings,
-} from "../../lib/siteSettingsTypes";
+} from "../lib/siteSettingsTypes";
 
 // Supabase configuration
 const SUPABASE_URL = "https://frncxsyzrtzwswnmbvtn.supabase.co";

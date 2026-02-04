@@ -4,7 +4,7 @@ import type {
   PageKey,
   PageKeyToContent,
   PageRow,
-} from "../../lib/pageContentTypes";
+} from "../lib/pageContentTypes";
 
 // Supabase configuration
 const SUPABASE_URL = "https://frncxsyzrtzwswnmbvtn.supabase.co";
