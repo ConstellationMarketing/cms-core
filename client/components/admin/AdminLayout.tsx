@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '../../lib/supabase';
 import AdminSidebar from './AdminSidebar';
 import { Loader2 } from 'lucide-react';
 import type { User } from '@supabase/supabase-js';

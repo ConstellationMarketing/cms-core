@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase";
-import type { PageRevision, Page } from "@/lib/database.types";
+import { supabase } from "../../lib/supabase";
+import type { PageRevision, Page } from "../../lib/database.types";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {

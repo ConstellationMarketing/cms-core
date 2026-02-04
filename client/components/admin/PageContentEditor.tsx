@@ -15,7 +15,7 @@ import type {
   AboutPageContent,
   ContactPageContent,
   PracticeAreasPageContent,
-} from "@/lib/pageContentTypes";
+} from "../../lib/pageContentTypes";
 
 interface PageContentEditorProps {
   pageKey: string;
