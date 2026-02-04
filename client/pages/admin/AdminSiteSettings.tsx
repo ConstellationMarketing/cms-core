@@ -7,12 +7,12 @@ import type {
   FooterLink,
   SocialLink,
   SiteSettingsRow,
-} from "@/lib/siteSettingsTypes";
+} from "../../lib/SettingsTypes";
 import {
   DEFAULT_SITE_SETTINGS,
   rowToSiteSettings,
   siteSettingsToRow,
-} from "@/lib/siteSettingsTypes";
+} from "../../lib/SettingsTypes";
 import { clearSiteSettingsCache } from "../../hooks/useSiteSettings";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
