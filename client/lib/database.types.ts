@@ -68,7 +68,7 @@ export interface Template {
   id: string;
   name: string;
   page_type: PageType;
-  default_content: ContentBlock[];
+  default_content: unknown;
   default_meta_title: string | null;
   default_meta_description: string | null;
   created_at: string;
@@ -110,7 +110,7 @@ export interface PageRevision {
   title: string;
   url_path: string;
   page_type: PageType;
-  content: ContentBlock[];
+  content: unknown;
   meta_title: string | null;
   meta_description: string | null;
   canonical_url: string | null;
