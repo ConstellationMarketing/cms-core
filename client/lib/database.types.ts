@@ -48,7 +48,7 @@ export interface Page {
   title: string;
   url_path: string;
   page_type: PageType;
-  content: ContentBlock[];
+  content: unknown; // template-specific blocks live in the site repo
   meta_title: string | null;
   meta_description: string | null;
   canonical_url: string | null;
