@@ -23,6 +23,9 @@ interface UseSiteSettingsResult {
 let settingsCache: SiteSettings | null = null;
 let fetchPromise: Promise<SiteSettings> | null = null;
 
+type Listener = () => void;
+const listeners = new Set<Listener>();
+
 export function useSiteSettings(): UseSiteSettingsResult {
   const [settings, setSettings] = useState<SiteSettings>(
     settingsCache || DEFAULT_SITE_SETTINGS,
@@ -112,9 +115,18 @@ export function useSiteSettings(): UseSiteSettingsResult {
     }
 
     fetchSettings();
+const handleInvalidation = () => {
+  if (isMounted) {
+    setIsLoading(true);
+    fetchSettings();
+  }
+};
+
+listeners.add(handleInvalidation);
 
     return () => {
       isMounted = false;
+      listeners.delete(handleInvalidation);
     };
   }, []);
 
@@ -129,6 +141,7 @@ export function useSiteSettings(): UseSiteSettingsResult {
 export function clearSiteSettingsCache() {
   settingsCache = null;
   fetchPromise = null;
+  listeners.forEach((fn) => fn());
 }
 
 // Helper to get the global phone number (for pages that want to use it)
