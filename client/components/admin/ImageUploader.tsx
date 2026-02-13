@@ -64,11 +64,38 @@ export default function ImageUploader({
         }
 
         // Get public URL
-        const { data: urlData } = supabase.storage
-          .from(bucket)
-          .getPublicUrl(fileName);
+const { data: urlData } = supabase.storage
+  .from(bucket)
+  .getPublicUrl(fileName);
 
-        onChange(urlData.publicUrl);
+const publicUrl = urlData.publicUrl;
+
+// Set the field value immediately (this is the important part for editors)
+onChange(publicUrl);
+
+// Best-effort: also register in media table so it appears in /admin/media
+try {
+  const { data: userData, error: userErr } = await supabase.auth.getUser();
+  if (userErr) throw userErr;
+
+  const uploadedBy = userData?.user?.id ?? null;
+
+  const { error: mediaErr } = await supabase.from("media").insert({
+    file_name: file.name,
+    file_path: fileName,      // storage path like "uploads/123-abc.webp"
+    public_url: publicUrl,
+    file_size: file.size ?? null,
+    mime_type: file.type ?? null,
+    uploaded_by: uploadedBy,
+  });
+
+  if (mediaErr) {
+    console.warn("[ImageUploader] Failed to insert media row:", mediaErr);
+  }
+} catch (e) {
+  console.warn("[ImageUploader] Failed to register media row:", e);
+};
+
       } catch (err) {
         console.error("Upload error:", err);
         setError(err instanceof Error ? err.message : "Upload failed");
