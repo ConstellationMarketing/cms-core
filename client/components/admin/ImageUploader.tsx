@@ -31,26 +31,24 @@ export default function ImageUploader({
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleUpload = useCallback(
-    async (file: File) => {
-     const isImage = file.type.startsWith("image/");
-     const isPdf = file.type === "application/pdf";
+  async (file: File) => {
+    const isImage = file.type.startsWith("image/");
+    const isPdf = file.type === "application/pdf";
 
-if (!isImage && !isPdf) {
-  setError("Please upload an image or PDF file");
-  return;
-}
+    if (!isImage && !isPdf) {
+      setError("Please upload an image or PDF file");
+      return;
+    }
 
-      }
+    if (file.size > 10 * 1024 * 1024) {
+      setError("File size must be less than 10MB");
+      return;
+    }
 
-      if (file.size > 10 * 1024 * 1024) {
-        setError("File size must be less than 10MB");
-        return;
-      }
+    setError(null);
+    setUploading(true);
 
-      setError(null);
-      setUploading(true);
-
-      try {
+    try {
         // Generate unique filename
         const ext = file.name.split(".").pop();
         const timestamp = Date.now();
