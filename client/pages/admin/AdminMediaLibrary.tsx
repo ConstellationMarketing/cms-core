@@ -45,6 +45,7 @@ import {
   Image as ImageIcon,
   FileWarning,
   Search,
+  FileText,
 } from "lucide-react";
 
 export default function AdminMediaLibrary() {
@@ -231,7 +232,8 @@ export default function AdminMediaLibrary() {
       }
     }
   };
-
+  
+  const isPdf = (m: Media) => m.mime_type === "application/pdf";
   const formatFileSize = (bytes: number | null) => {
     if (!bytes) return "Unknown";
     if (bytes < 1024) return `${bytes} B`;
@@ -267,7 +269,7 @@ export default function AdminMediaLibrary() {
             type="file"
             id="file-upload"
             multiple
-            accept="image/*"
+            accept="image/*,application/pdf"
             onChange={handleFileUpload}
             className="hidden"
           />
@@ -282,7 +284,7 @@ export default function AdminMediaLibrary() {
                 ) : (
                   <>
                     <Upload className="h-4 w-4 mr-2" />
-                    Upload Images
+                    Upload Files
                   </>
                 )}
               </span>
@@ -311,7 +313,7 @@ export default function AdminMediaLibrary() {
             <p className="text-gray-500 text-center">
               {searchQuery
                 ? "No media found matching your search"
-                : "No media uploaded yet. Click 'Upload Images' to add some."}
+                : "No media uploaded yet. Click 'Upload Files' to add some."}
             </p>
           </CardContent>
         </Card>
@@ -323,11 +325,21 @@ export default function AdminMediaLibrary() {
               className="group relative bg-gray-100 rounded-lg overflow-hidden aspect-square cursor-pointer border hover:border-blue-500 transition-colors"
               onClick={() => handleSelectMedia(media)}
             >
-              <img
-                src={media.public_url}
-                alt={media.alt_text || media.file_name}
-                className="w-full h-full object-cover"
-              />
+              {isPdf(media) ? (
+  <div className="w-full h-full flex flex-col items-center justify-center bg-gray-50">
+    <FileText className="h-10 w-10 text-gray-400" />
+    <p className="mt-2 text-xs text-gray-600 text-center px-2 truncate w-full">
+      {media.file_name}
+    </p>
+  </div>
+) : (
+  <img
+    src={media.public_url}
+    alt={media.alt_text || media.file_name}
+    className="w-full h-full object-cover"
+  />
+)}
+
               <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                 <Button
                   variant="secondary"
