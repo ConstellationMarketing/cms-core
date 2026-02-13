@@ -31,9 +31,14 @@ export default function ImageUploader({
 
   const handleUpload = useCallback(
     async (file: File) => {
-      if (!file.type.startsWith("image/")) {
-        setError("Please upload an image file");
-        return;
+     const isImage = file.type.startsWith("image/");
+     const isPdf = file.type === "application/pdf";
+
+if (!isImage && !isPdf) {
+  setError("Please upload an image or PDF file");
+  return;
+}
+
       }
 
       if (file.size > 10 * 1024 * 1024) {
