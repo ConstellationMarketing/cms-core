@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { Upload, X, Loader2, Image as ImageIcon } from "lucide-react";
+const isPdfUrl = (url?: string) => !!url && url.toLowerCase().includes(".pdf");
 
 interface ImageUploaderProps {
   value?: string;
@@ -157,7 +158,7 @@ try {
       <input
         ref={inputRef}
         type="file"
-        accept="image/*"
+        accept="image/*,application/pdf"
         onChange={handleChange}
         className="hidden"
       />
@@ -165,11 +166,22 @@ try {
       {value ? (
         <div className="relative group">
           <div className="relative rounded-lg overflow-hidden border bg-gray-50">
-            <img
-              src={value}
-              alt="Uploaded"
-              className="w-full h-48 object-cover"
-            />
+            {isPdfUrl(value) ? (
+  <div className="w-full h-48 flex flex-col items-center justify-center bg-gray-50">
+    <p className="text-sm text-gray-600 font-medium">PDF Uploaded</p>
+    <a
+      href={value}
+      target="_blank"
+      rel="noreferrer"
+      className="text-xs text-blue-600 underline mt-1"
+    >
+      Open PDF
+    </a>
+  </div>
+) : (
+  <img src={value} alt="Uploaded" className="w-full h-48 object-cover" />
+)}
+
             <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
               <Button
                 type="button"
@@ -227,7 +239,7 @@ try {
               </div>
               <p className="text-sm text-gray-500">{placeholder}</p>
               <p className="text-xs text-gray-400">
-                PNG, JPG, GIF, WebP up to 10MB
+                PNG, JPG, GIF, WebP, PDF up to 10MB
               </p>
             </div>
           )}
