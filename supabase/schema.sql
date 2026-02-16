@@ -274,9 +274,11 @@ select
     'phoneNumber', '',
     'phoneDisplay', '',
     'phoneAvailability', '',
+    'footerTaglineHtml', '',
     'applyPhoneGlobally', true
   )
 where not exists (
   select 1 from public.site_settings where settings_key = 'global'
 );
+
 
