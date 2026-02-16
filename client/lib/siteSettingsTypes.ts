@@ -56,6 +56,9 @@ export interface SiteSettings {
   // Copyright
   copyrightText: string;
 
+  // Footer Tagline (Rich Text HTML)
+  footerTaglineHtml: string;
+
   // SEO
   siteNoindex: boolean;
 
@@ -87,6 +90,7 @@ export interface SiteSettingsRow {
   map_embed_url: string | null;
   social_links: SocialLink[];
   copyright_text: string | null;
+  footer_tagline_html: string | null;
   site_noindex: boolean;
   ga4_measurement_id: string | null;
   google_ads_id: string | null;
@@ -126,6 +130,7 @@ export const DEFAULT_SITE_SETTINGS: SiteSettings = {
    
   ],
   copyrightText: "",
+  footerTaglineHtml: "",
   siteNoindex: false,
   ga4MeasurementId: "",
   googleAdsId: "",
@@ -164,6 +169,7 @@ export function rowToSiteSettings(row: SiteSettingsRow): SiteSettings {
       ? row.social_links
       : DEFAULT_SITE_SETTINGS.socialLinks,
     copyrightText: row.copyright_text || DEFAULT_SITE_SETTINGS.copyrightText,
+    footerTaglineHtml: row.footer_tagline_html || DEFAULT_SITE_SETTINGS.footerTaglineHtml,
     siteNoindex: row.site_noindex ?? DEFAULT_SITE_SETTINGS.siteNoindex,
     ga4MeasurementId: row.ga4_measurement_id || "",
     googleAdsId: row.google_ads_id || "",
@@ -194,6 +200,7 @@ export function siteSettingsToRow(
     map_embed_url: settings.mapEmbedUrl,
     social_links: settings.socialLinks,
     copyright_text: settings.copyrightText,
+    footer_tagline_html: settings.footerTaglineHtml || null,
     site_noindex: settings.siteNoindex,
     ga4_measurement_id: settings.ga4MeasurementId || null,
     google_ads_id: settings.googleAdsId || null,
