@@ -17,6 +17,16 @@ import type {
   PracticeAreasPageContent,
 } from "../../lib/pageContentTypes";
 
+const DEFAULT_MISSION = {
+  heading: "",
+  paragraphs: [] as string[],
+  image: "",
+  ctaPrimaryText: "",
+  ctaPrimaryUrl: "",
+  ctaSecondaryText: "",
+  ctaSecondaryUrl: "",
+};
+
 interface PageContentEditorProps {
   pageKey: string;
   content: unknown;
@@ -119,6 +129,13 @@ function ArrayEditor<T extends Record<string, unknown>>({
       </Button>
     </div>
   );
+}
+function asRecord(v: unknown): Record<string, any> {
+  return v && typeof v === "object" ? (v as any) : {};
+}
+
+function asString(v: unknown, fallback = ""): string {
+  return typeof v === "string" ? v : fallback;
 }
 
 // Home Page Editor
@@ -264,87 +281,108 @@ function HomePageEditor({
           <div>
             <Label>Heading</Label>
             <Input
-              value={content.mission.heading}
-              onChange={(e) =>
-                update("mission", {
-                  ...content.mission,
+              value={asString(asRecord(content).mission?.heading)}
+              onChange={(e) => {
+                const mission = {
+                  ...DEFAULT_MISSION,
+                  ...asRecord(asRecord(content).mission),
                   heading: e.target.value,
-                })
-              }
+                };
+
+                update("mission", mission);
+              }}
             />
           </div>
           <div>
             <Label>Paragraphs (one per line)</Label>
             <Textarea
-              value={content.mission.paragraphs.join("\n\n")}
-              onChange={(e) =>
-                update("mission", {
-                  ...content.mission,
-                  paragraphs: e.target.value.split("\n\n").filter(Boolean),
-                })
-              }
+              value={(asRecord(asRecord(content).mission).paragraphs as string[] | undefined)?.join("\n\n") ?? ""}
+              onChange={(e) => {
+                const mission = {
+                  ...DEFAULT_MISSION,
+                  ...asRecord(asRecord(content).mission),
+                  paragraphs: e.target.value.split("\n\n").map(s => s.trim()).filter(Boolean),
+                };
+                update("mission", mission);
+              }}
               rows={6}
             />
+
           </div>
           <div>
             <Label>Image URL</Label>
             <Input
-              value={content.mission.image}
-              onChange={(e) =>
-                update("mission", { ...content.mission, image: e.target.value })
-              }
-            />
+            value={asString(asRecord(content).mission?.image)}
+            onChange={(e) => {
+              const mission = {
+                ...DEFAULT_MISSION,
+                ...asRecord(asRecord(content).mission),
+                image: e.target.value,
+              };
+              update("mission", mission);
+            }}
+          />
+
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label>Primary CTA Text</Label>
               <Input
-                value={content.mission.ctaPrimaryText}
-                onChange={(e) =>
-                  update("mission", {
-                    ...content.mission,
-                    ctaPrimaryText: e.target.value,
-                  })
-                }
-              />
+              value={asString(asRecord(content).mission?.ctaPrimaryText)}
+              onChange={(e) => {
+                const mission = {
+                  ...DEFAULT_MISSION,
+                  ...asRecord(asRecord(content).mission),
+                  ctaPrimaryText: e.target.value,
+                };
+                update("mission", mission);
+              }}
+            />
+
             </div>
             <div>
               <Label>Primary CTA URL</Label>
               <Input
-                value={content.mission.ctaPrimaryUrl}
-                onChange={(e) =>
-                  update("mission", {
-                    ...content.mission,
-                    ctaPrimaryUrl: e.target.value,
-                  })
-                }
-              />
+              value={asString(asRecord(content).mission?.ctaPrimaryUrl)}
+              onChange={(e) => {
+                const mission = {
+                  ...DEFAULT_MISSION,
+                  ...asRecord(asRecord(content).mission),
+                  ctaPrimaryUrl: e.target.value,
+                };
+                update("mission", mission);
+              }}
+            />
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label>Secondary CTA Text</Label>
               <Input
-                value={content.mission.ctaSecondaryText}
-                onChange={(e) =>
-                  update("mission", {
-                    ...content.mission,
-                    ctaSecondaryText: e.target.value,
-                  })
-                }
-              />
+              value={asString(asRecord(content).mission?.ctaSecondaryText)}
+              onChange={(e) => {
+                const mission = {
+                  ...DEFAULT_MISSION,
+                  ...asRecord(asRecord(content).mission),
+                  ctaSecondaryText: e.target.value,
+                };
+                update("mission", mission);
+              }}
+            />
             </div>
             <div>
               <Label>Secondary CTA URL</Label>
               <Input
-                value={content.mission.ctaSecondaryUrl}
-                onChange={(e) =>
-                  update("mission", {
-                    ...content.mission,
-                    ctaSecondaryUrl: e.target.value,
-                  })
-                }
-              />
+              value={asString(asRecord(content).mission?.ctaSecondaryUrl)}
+              onChange={(e) => {
+                const mission = {
+                  ...DEFAULT_MISSION,
+                  ...asRecord(asRecord(content).mission),
+                  ctaSecondaryUrl: e.target.value,
+                };
+                update("mission", mission);
+              }}
+            />
             </div>
           </div>
         </div>
