@@ -281,4 +281,7 @@ where not exists (
   select 1 from public.site_settings where settings_key = 'global'
 );
 
+alter table public.site_settings
+add column if not exists footer_tagline_html text;
+
 
