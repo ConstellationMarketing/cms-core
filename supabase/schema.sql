@@ -255,3 +255,28 @@ create policy "Authenticated users can delete"
 on storage.objects for delete
 to authenticated
 using (bucket_id = 'media');
+-- Seed global site settings row (safe to rerun)
+insert into public.site_settings (settings_key, settings)
+select
+  'global',
+  jsonb_build_object(
+    'siteName', 'New Site',
+    'logoUrl', '',
+    'logoAlt', '',
+    'navigationItems', '[]'::jsonb,
+    'footerAboutLinks', '[]'::jsonb,
+    'footerPracticeLinks', '[]'::jsonb,
+    'socialLinks', '[]'::jsonb,
+    'headerCtaText', '',
+    'headerCtaUrl', '/contact',
+    'mapEmbedUrl', '',
+    'copyrightText', '',
+    'phoneNumber', '',
+    'phoneDisplay', '',
+    'phoneAvailability', '',
+    'applyPhoneGlobally', true
+  )
+where not exists (
+  select 1 from public.site_settings where settings_key = 'global'
+);
+
