@@ -102,41 +102,30 @@ export interface SiteSettingsRow {
 export const DEFAULT_SITE_SETTINGS: SiteSettings = {
   siteName: "Silva Trial Lawyers",
   logoUrl:
-    "https://cdn.builder.io/api/v1/image/assets%2F50bd0f2438824f8ea1271cf7dd2c508e%2F76aac573949f43688ef9e04aa97e4711?format=webp&width=800&height=1200",
-  logoAlt: "Silva Trial Lawyers",
+    "",
+  logoAlt: "",
   phoneNumber: "4049057742",
   phoneDisplay: "404-905-7742",
   phoneAvailability: "Available 24/7",
   applyPhoneGlobally: true,
-  headerCtaText: "GET HELP NOW",
-  headerCtaUrl: "#book",
+  headerCtaText: "",
+  headerCtaUrl: "",
   navigationItems: [
-    { label: "Home", href: "/", order: 1 },
-    { label: "About Us", href: "/about", order: 2 },
-    { label: "Practice Areas", href: "/practice-areas", order: 3 },
-    { label: "Contact Us", href: "/contact", order: 4 },
   ],
   footerAboutLinks: [
-    { label: "About Us", href: "/about" },
-    { label: "Contact", href: "/contact" },
+    
   ],
   footerPracticeLinks: [
-    { label: "Car Accidents", href: "/practice-areas" },
-    { label: "Truck Accidents", href: "/practice-areas" },
-    { label: "Motorcycle Accidents", href: "/practice-areas" },
-    { label: "Premises Liability", href: "/practice-areas" },
-    { label: "Workers Compensation", href: "/practice-areas" },
-    { label: "Wrongful Death", href: "/practice-areas" },
+   
   ],
   addressLine1: "4120 Presidential Parkway, Suite 200",
   addressLine2: "Atlanta, Georgia 30340",
   mapEmbedUrl:
-    "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3313.5!2d-84.2!3d33.9!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2s4120+Presidential+Pkwy%2C+Atlanta%2C+GA+30340!5e0!3m2!1sen!2sus",
+    "",
   socialLinks: [
-    { platform: "facebook", url: "https://facebook.com", enabled: true },
-    { platform: "instagram", url: "https://instagram.com", enabled: true },
+   
   ],
-  copyrightText: "Copyright © 2026 | Silva Trial Lawyers | All Rights Reserved",
+  copyrightText: "",
   siteNoindex: false,
   ga4MeasurementId: "",
   googleAdsId: "",
