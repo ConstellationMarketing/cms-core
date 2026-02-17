@@ -26,6 +26,50 @@ const DEFAULT_MISSION = {
   ctaSecondaryText: "",
   ctaSecondaryUrl: "",
 };
+const DEFAULT_HOME: HomePageContent = {
+  hero: {
+    title: "",
+    subtitle: "",
+    backgroundImage: "",
+    ctaText: "",
+    ctaUrl: "",
+    attorneyImage: "",
+    badgeImage: "",
+  },
+  features: [],
+  mission: DEFAULT_MISSION,
+  attorney: {
+    name: "",
+    title: "",
+    photo: "",
+    bio: "",
+    bullets: [],
+    phone: "",
+  },
+  speakWithUs: {
+    heading: "",
+    description: "",
+    image: "",
+    ctaText: "",
+    ctaUrl: "",
+  },
+  clientStories: {
+    heading: "",
+    subtitle: "",
+    videos: [],
+  },
+  contactForm: {
+    heading: "",
+    image: "",
+    badgeImage: "",
+  },
+  services: {
+    heading: "",
+    description: "",
+    items: [],
+    closingText: "",
+  },
+};
 
 interface PageContentEditorProps {
   pageKey: string;
@@ -138,6 +182,10 @@ function asString(v: unknown, fallback = ""): string {
   return typeof v === "string" ? v : fallback;
 }
 
+function asStringArray(v: unknown): string[] {
+  return Array.isArray(v) ? v.filter((x) => typeof x === "string") : [];
+}
+
 // Home Page Editor
 function HomePageEditor({
   content,
@@ -146,11 +194,57 @@ function HomePageEditor({
   content: HomePageContent;
   onChange: (c: HomePageContent) => void;
 }) {
+
+  // 1️⃣ SAFE OBJECT FIRST
+  const safe: HomePageContent = (() => {
+    const c = asRecord(content);
+
+    const hero = { ...DEFAULT_HOME.hero, ...asRecord(c.hero) };
+    const attorney = { ...DEFAULT_HOME.attorney, ...asRecord(c.attorney) };
+    const speakWithUs = { ...DEFAULT_HOME.speakWithUs, ...asRecord(c.speakWithUs) };
+    const clientStoriesRaw = asRecord(c.clientStories);
+    const contactForm = { ...DEFAULT_HOME.contactForm, ...asRecord(c.contactForm) };
+    const servicesRaw = asRecord(c.services);
+
+    const missionRaw = asRecord(c.mission);
+    const mission = {
+      ...DEFAULT_MISSION,
+      ...missionRaw,
+      paragraphs: asStringArray(missionRaw.paragraphs),
+    };
+
+    const features = Array.isArray(c.features) ? c.features : [];
+    const servicesItems = Array.isArray(servicesRaw.items) ? servicesRaw.items : [];
+    const clientVideos = Array.isArray(clientStoriesRaw.videos) ? clientStoriesRaw.videos : [];
+
+    return {
+      ...DEFAULT_HOME,
+      ...c,
+      hero,
+      attorney,
+      speakWithUs,
+      contactForm,
+      mission,
+      features,
+      services: {
+        ...DEFAULT_HOME.services,
+        ...servicesRaw,
+        items: servicesItems,
+      },
+      clientStories: {
+        ...DEFAULT_HOME.clientStories,
+        ...clientStoriesRaw,
+        videos: clientVideos,
+      },
+    };
+  })();
+
+  // 2️⃣ UPDATE FUNCTION AFTER SAFE
   const update = <K extends keyof HomePageContent>(
     key: K,
     value: HomePageContent[K],
   ) => {
-    onChange({ ...content, [key]: value });
+    onChange({ ...safe, [key]: value });
   };
 
   return (
@@ -161,28 +255,28 @@ function HomePageEditor({
           <div>
             <Label>Title</Label>
             <Input
-              value={content.hero.title}
+              value={safe.hero.title}
               onChange={(e) =>
-                update("hero", { ...content.hero, title: e.target.value })
+                update("hero", { ...safe.hero, title: e.target.value })
               }
             />
           </div>
           <div>
             <Label>Subtitle</Label>
             <Input
-              value={content.hero.subtitle}
+              value={safe.hero.subtitle}
               onChange={(e) =>
-                update("hero", { ...content.hero, subtitle: e.target.value })
+                update("hero", { ...safe.hero, subtitle: e.target.value })
               }
             />
           </div>
           <div>
             <Label>Background Image URL</Label>
             <Input
-              value={content.hero.backgroundImage}
+              value={safe.hero.backgroundImage}
               onChange={(e) =>
                 update("hero", {
-                  ...content.hero,
+                  ...safe.hero,
                   backgroundImage: e.target.value,
                 })
               }
@@ -192,18 +286,18 @@ function HomePageEditor({
             <div>
               <Label>CTA Text</Label>
               <Input
-                value={content.hero.ctaText}
+                value={safe.hero.ctaText}
                 onChange={(e) =>
-                  update("hero", { ...content.hero, ctaText: e.target.value })
+                  update("hero", { ...safe.hero, ctaText: e.target.value })
                 }
               />
             </div>
             <div>
               <Label>CTA URL</Label>
               <Input
-                value={content.hero.ctaUrl}
+                value={safe.hero.ctaUrl}
                 onChange={(e) =>
-                  update("hero", { ...content.hero, ctaUrl: e.target.value })
+                  update("hero", { ...safe.hero, ctaUrl: e.target.value })
                 }
               />
             </div>
@@ -211,10 +305,10 @@ function HomePageEditor({
           <div>
             <Label>Attorney Image URL</Label>
             <Input
-              value={content.hero.attorneyImage}
+              value={safe.hero.attorneyImage}
               onChange={(e) =>
                 update("hero", {
-                  ...content.hero,
+                  ...safe.hero,
                   attorneyImage: e.target.value,
                 })
               }
@@ -223,9 +317,9 @@ function HomePageEditor({
           <div>
             <Label>Badge Image URL</Label>
             <Input
-              value={content.hero.badgeImage}
+              value={safe.hero.badgeImage}
               onChange={(e) =>
-                update("hero", { ...content.hero, badgeImage: e.target.value })
+                update("hero", { ...safe.hero, badgeImage: e.target.value })
               }
             />
           </div>
@@ -235,7 +329,7 @@ function HomePageEditor({
       {/* Features Section */}
       <Section title="Features" defaultOpen={false}>
         <ArrayEditor
-          items={content.features}
+          items={safe.features}
           onChange={(items) => update("features", items)}
           itemLabel="Feature"
           newItem={() => ({ icon: "trial-driven", title: "", description: "" })}
@@ -395,10 +489,10 @@ function HomePageEditor({
             <div>
               <Label>Name</Label>
               <Input
-                value={content.attorney.name}
+                value={safe.attorney.name}
                 onChange={(e) =>
                   update("attorney", {
-                    ...content.attorney,
+                    ...safe.attorney,
                     name: e.target.value,
                   })
                 }
@@ -407,10 +501,10 @@ function HomePageEditor({
             <div>
               <Label>Title</Label>
               <Input
-                value={content.attorney.title}
+                value={safe.attorney.title}
                 onChange={(e) =>
                   update("attorney", {
-                    ...content.attorney,
+                    ...safe.attorney,
                     title: e.target.value,
                   })
                 }
@@ -420,10 +514,10 @@ function HomePageEditor({
           <div>
             <Label>Photo URL</Label>
             <Input
-              value={content.attorney.photo}
+              value={safe.attorney.photo}
               onChange={(e) =>
                 update("attorney", {
-                  ...content.attorney,
+                  ...safe.attorney,
                   photo: e.target.value,
                 })
               }
@@ -432,9 +526,9 @@ function HomePageEditor({
           <div>
             <Label>Bio</Label>
             <Textarea
-              value={content.attorney.bio}
+              value={safe.attorney.bio}
               onChange={(e) =>
-                update("attorney", { ...content.attorney, bio: e.target.value })
+                update("attorney", { ...safe.attorney, bio: e.target.value })
               }
               rows={3}
             />
@@ -442,10 +536,10 @@ function HomePageEditor({
           <div>
             <Label>Bullet Points (one per line)</Label>
             <Textarea
-              value={content.attorney.bullets.join("\n")}
+              value={safe.attorney.bullets.join("\n")}
               onChange={(e) =>
                 update("attorney", {
-                  ...content.attorney,
+                  ...safe.attorney,
                   bullets: e.target.value.split("\n").filter(Boolean),
                 })
               }
@@ -455,10 +549,10 @@ function HomePageEditor({
           <div>
             <Label>Phone</Label>
             <Input
-              value={content.attorney.phone}
+              value={safe.attorney.phone}
               onChange={(e) =>
                 update("attorney", {
-                  ...content.attorney,
+                  ...safe.attorney,
                   phone: e.target.value,
                 })
               }
@@ -473,10 +567,10 @@ function HomePageEditor({
           <div>
             <Label>Heading</Label>
             <Input
-              value={content.speakWithUs.heading}
+              value={safe.speakWithUs.heading}
               onChange={(e) =>
                 update("speakWithUs", {
-                  ...content.speakWithUs,
+                  ...safe.speakWithUs,
                   heading: e.target.value,
                 })
               }
@@ -485,10 +579,10 @@ function HomePageEditor({
           <div>
             <Label>Description</Label>
             <Textarea
-              value={content.speakWithUs.description}
+              value={safe.speakWithUs.description}
               onChange={(e) =>
                 update("speakWithUs", {
-                  ...content.speakWithUs,
+                  ...safe.speakWithUs,
                   description: e.target.value,
                 })
               }
@@ -498,10 +592,10 @@ function HomePageEditor({
           <div>
             <Label>Image URL</Label>
             <Input
-              value={content.speakWithUs.image}
+              value={safe.speakWithUs.image}
               onChange={(e) =>
                 update("speakWithUs", {
-                  ...content.speakWithUs,
+                  ...safe.speakWithUs,
                   image: e.target.value,
                 })
               }
@@ -511,10 +605,10 @@ function HomePageEditor({
             <div>
               <Label>CTA Text</Label>
               <Input
-                value={content.speakWithUs.ctaText}
+                value={safe.speakWithUs.ctaText}
                 onChange={(e) =>
                   update("speakWithUs", {
-                    ...content.speakWithUs,
+                    ...safe.speakWithUs,
                     ctaText: e.target.value,
                   })
                 }
@@ -523,10 +617,10 @@ function HomePageEditor({
             <div>
               <Label>CTA URL</Label>
               <Input
-                value={content.speakWithUs.ctaUrl}
+                value={safe.speakWithUs.ctaUrl}
                 onChange={(e) =>
                   update("speakWithUs", {
-                    ...content.speakWithUs,
+                    ...safe.speakWithUs,
                     ctaUrl: e.target.value,
                   })
                 }
@@ -542,10 +636,10 @@ function HomePageEditor({
           <div>
             <Label>Heading</Label>
             <Input
-              value={content.clientStories.heading}
+              value={safe.clientStories.heading}
               onChange={(e) =>
                 update("clientStories", {
-                  ...content.clientStories,
+                  ...safe.clientStories,
                   heading: e.target.value,
                 })
               }
@@ -554,10 +648,10 @@ function HomePageEditor({
           <div>
             <Label>Subtitle</Label>
             <Textarea
-              value={content.clientStories.subtitle}
+              value={safe.clientStories.subtitle}
               onChange={(e) =>
                 update("clientStories", {
-                  ...content.clientStories,
+                  ...safe.clientStories,
                   subtitle: e.target.value,
                 })
               }
@@ -565,10 +659,10 @@ function HomePageEditor({
             />
           </div>
           <ArrayEditor
-            items={content.clientStories.videos}
+            items={safe.clientStories.videos}
             onChange={(items) =>
               update("clientStories", {
-                ...content.clientStories,
+                ...safe.clientStories,
                 videos: items,
               })
             }
@@ -607,10 +701,10 @@ function HomePageEditor({
           <div>
             <Label>Heading</Label>
             <Input
-              value={content.contactForm.heading}
+              value={safe.contactForm.heading}
               onChange={(e) =>
                 update("contactForm", {
-                  ...content.contactForm,
+                  ...safe.contactForm,
                   heading: e.target.value,
                 })
               }
@@ -619,10 +713,10 @@ function HomePageEditor({
           <div>
             <Label>Image URL</Label>
             <Input
-              value={content.contactForm.image}
+              value={safe.contactForm.image}
               onChange={(e) =>
                 update("contactForm", {
-                  ...content.contactForm,
+                  ...safe.contactForm,
                   image: e.target.value,
                 })
               }
@@ -631,10 +725,10 @@ function HomePageEditor({
           <div>
             <Label>Badge Image URL</Label>
             <Input
-              value={content.contactForm.badgeImage}
+              value={safe.contactForm.badgeImage}
               onChange={(e) =>
                 update("contactForm", {
-                  ...content.contactForm,
+                  ...safe.contactForm,
                   badgeImage: e.target.value,
                 })
               }
@@ -649,10 +743,10 @@ function HomePageEditor({
           <div>
             <Label>Heading</Label>
             <Input
-              value={content.services.heading}
+              value={safe.services.heading}
               onChange={(e) =>
                 update("services", {
-                  ...content.services,
+                  ...safe.services,
                   heading: e.target.value,
                 })
               }
@@ -661,10 +755,10 @@ function HomePageEditor({
           <div>
             <Label>Description</Label>
             <Textarea
-              value={content.services.description}
+              value={safe.services.description}
               onChange={(e) =>
                 update("services", {
-                  ...content.services,
+                  ...safe.services,
                   description: e.target.value,
                 })
               }
@@ -672,9 +766,9 @@ function HomePageEditor({
             />
           </div>
           <ArrayEditor
-            items={content.services.items}
+            items={safe.services.items}
             onChange={(items) =>
-              update("services", { ...content.services, items })
+              update("services", { ...safe.services, items })
             }
             itemLabel="Service"
             newItem={() => ({ title: "", icon: "CarFront" })}
@@ -705,10 +799,10 @@ function HomePageEditor({
           <div>
             <Label>Closing Text</Label>
             <Textarea
-              value={content.services.closingText}
+              value={safe.services.closingText}
               onChange={(e) =>
                 update("services", {
-                  ...content.services,
+                  ...safe.services,
                   closingText: e.target.value,
                 })
               }
