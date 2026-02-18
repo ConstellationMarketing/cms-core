@@ -357,7 +357,7 @@ function BlockFields({ block, onUpdate }: { block: ContentBlock; onUpdate: (upda
       return (
         <div>
           <Label>Heading</Label>
-          <Input value={block.heading} onChange={(e) => onUpdate({ heading: e.target.value })} />
+          <Input value={block.heading ?? ""} onChange={(e) => onUpdate({ heading: e.target.value })} />
         </div>
       );
 

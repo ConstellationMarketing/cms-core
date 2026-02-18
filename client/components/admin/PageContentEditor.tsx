@@ -1084,7 +1084,7 @@ function AboutPageEditor({
           <div>
             <Label>Heading</Label>
             <Input
-              value={content.cta.heading}
+              value={content.cta.heading ?? ""}
               onChange={(e) =>
                 update("cta", { ...content.cta, heading: e.target.value })
               }
@@ -1225,7 +1225,7 @@ function ContactPageEditor({
           <div>
             <Label>Heading</Label>
             <Input
-              value={content.form.heading}
+              value={content.form.heading ?? ""}
               onChange={(e) =>
                 update("form", { ...content.form, heading: e.target.value })
               }
@@ -1313,7 +1313,7 @@ function ContactPageEditor({
           <div>
             <Label>Heading</Label>
             <Input
-              value={content.cta.heading}
+              value={content.cta.heading ?? ""}
               onChange={(e) =>
                 update("cta", { ...content.cta, heading: e.target.value })
               }
@@ -1447,7 +1447,7 @@ function PracticeAreasPageEditor({
           <div>
             <Label>Heading</Label>
             <Input
-              value={content.options.heading}
+              value={content.options.heading ?? ""}
               onChange={(e) =>
                 update("options", {
                   ...content.options,
@@ -1509,7 +1509,7 @@ function PracticeAreasPageEditor({
           <div>
             <Label>Heading</Label>
             <Input
-              value={content.cta.heading}
+              value={content.cta.heading ?? ""}
               onChange={(e) =>
                 update("cta", { ...content.cta, heading: e.target.value })
               }
