@@ -56,8 +56,8 @@ export function usePageContent<K extends PageKey>(
           return;
         }
 
-        // Map page key to URL path
-        const urlPath = pageKey === "home" ? "/" : `/${pageKey}`;
+        // PageKey is already a URL path
+        const urlPath = pageKey;
 
         // Use raw fetch instead of Supabase client (workaround for client issues)
         const response = await fetch(
@@ -138,7 +138,8 @@ export async function prefetchPageContent(pageKey: PageKey): Promise<void> {
     return;
   }
 
-  const urlPath = pageKey === "home" ? "/" : `/${pageKey}`;
+  // PageKey is already a URL path
+  const urlPath = pageKey;
 
   const { data, error } = await supabase
     .from("pages")

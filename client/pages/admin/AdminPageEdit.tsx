@@ -1,7 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { supabase } from "../../lib/supabase";
 import type { Page, ContentBlock } from "@/lib/database.types";
+import { defaultHomeContent } from "@site/lib/cms/homePageTypes";
+import type { HomePageContent } from "@site/lib/cms/homePageTypes";
+import { defaultAboutContent } from "@site/lib/cms/aboutPageTypes";
+import type { AboutPageContent } from "@site/lib/cms/aboutPageTypes";
+import { defaultContactContent } from "@site/lib/cms/contactPageTypes";
+import type { ContactPageContent } from "@site/lib/cms/contactPageTypes";
+import { defaultPracticeAreasContent } from "@site/lib/cms/practiceAreasPageTypes";
+import type { PracticeAreasPageContent } from "@site/lib/cms/practiceAreasPageTypes";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -29,9 +37,44 @@ import BlockRenderer from "@site/components/BlockRenderer";
 import PageContentEditor from "../../components/admin/PageContentEditor";
 import ImageUploader from "../../components/admin/ImageUploader";
 import { clearPageCache } from "../../hooks/usePageContent";
+import type { PageKey } from "../../lib/pageContentTypes";
 import RevisionPanel, { createPageRevision } from "../../components/admin/RevisionPanel";
 import URLChangeRedirectModal from "../../components/admin/URLChangeRedirectModal";
 import type { PageRevision } from "@/lib/database.types";
+
+// Generic deep merge utility for content normalization
+function mergeWithDefaults<T extends Record<string, any>>(
+  cmsContent: Partial<T> | null | undefined,
+  defaults: T,
+): T {
+  if (!cmsContent) return defaults;
+
+  const result: any = { ...defaults };
+
+  for (const key in defaults) {
+    if (cmsContent[key] !== undefined) {
+      const defaultValue = defaults[key];
+      const cmsValue = cmsContent[key];
+
+      // Handle arrays: use CMS value if it has items, otherwise use defaults
+      if (Array.isArray(defaultValue)) {
+        result[key] = Array.isArray(cmsValue) && cmsValue.length > 0
+          ? cmsValue
+          : defaultValue;
+      }
+      // Handle nested objects: merge recursively
+      else if (defaultValue && typeof defaultValue === 'object' && !Array.isArray(defaultValue)) {
+        result[key] = { ...defaultValue, ...cmsValue };
+      }
+      // Primitive values: use CMS value
+      else {
+        result[key] = cmsValue;
+      }
+    }
+  }
+
+  return result as T;
+}
 
 export default function AdminPageEdit() {
   const { id } = useParams<{ id: string }>();
@@ -122,14 +165,8 @@ export default function AdminPageEdit() {
       alert("Failed to save page: " + error.message);
     } else {
       // Clear the page cache so the frontend fetches fresh content
-      if (page.url_path === "/") {
-        clearPageCache("home");
-      } else if (page.url_path === "/about") {
-        clearPageCache("about");
-      } else if (page.url_path === "/contact") {
-        clearPageCache("contact");
-      } else if (page.url_path === "/practice-areas") {
-        clearPageCache("practice-areas");
+      if (page.url_path === "/" || page.url_path === "/about" || page.url_path === "/contact" || page.url_path === "/practice-areas") {
+        clearPageCache(page.url_path as PageKey);
       }
       // Update tracking state after successful save
       setOriginalUrlPath(page.url_path);
@@ -184,6 +221,36 @@ export default function AdminPageEdit() {
   const isStructuredPage =
     page?.url_path &&
     ["/", "/about", "/contact", "/practice-areas"].includes(page.url_path);
+
+  // Normalize content by merging with defaults based on page type
+  const normalizedContent = useMemo(() => {
+    if (!isStructuredPage || !page?.content) return page?.content;
+
+    switch (page.url_path) {
+      case '/':
+        return mergeWithDefaults(
+          page.content as unknown as Partial<HomePageContent>,
+          defaultHomeContent
+        );
+      case '/about':
+        return mergeWithDefaults(
+          page.content as unknown as Partial<AboutPageContent>,
+          defaultAboutContent
+        );
+      case '/contact':
+        return mergeWithDefaults(
+          page.content as unknown as Partial<ContactPageContent>,
+          defaultContactContent
+        );
+      case '/practice-areas':
+        return mergeWithDefaults(
+          page.content as unknown as Partial<PracticeAreasPageContent>,
+          defaultPracticeAreasContent
+        );
+      default:
+        return page.content;
+    }
+  }, [page?.content, page?.url_path, isStructuredPage]);
 
   const handleStructuredContentChange = (content: unknown) => {
     updatePage({ content: content as ContentBlock[] });
@@ -276,7 +343,7 @@ export default function AdminPageEdit() {
                 </div>
                 <PageContentEditor
                   pageKey={page.url_path}
-                  content={page.content}
+                  content={normalizedContent}
                   onChange={handleStructuredContentChange}
                 />
               </div>
